@@ -31,6 +31,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	store.mu.Unlock()
 
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(user)
 }
 
@@ -61,6 +62,53 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(user)
+}
+
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+
+	store.mu.Lock()
+	user, exists := store.users[id]
+	if !exists {
+		store.mu.Unlock()
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
+	var updatedUser User
+	if err := json.NewDecoder(r.Body).Decode(&updatedUser); err != nil {
+		store.mu.Unlock()
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Giữ nguyên ID và CreatedAt
+	updatedUser.ID = user.ID
+	updatedUser.CreatedAt = user.CreatedAt
+	store.users[id] = &updatedUser
+	store.mu.Unlock()
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(updatedUser)
+}
+
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+
+	store.mu.Lock()
+	_, exists := store.users[id]
+	if !exists {
+		store.mu.Unlock()
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
+	delete(store.users, id)
+	store.mu.Unlock()
+
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func GetUserByID(id int) (*User, bool) {

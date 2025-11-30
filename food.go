@@ -43,6 +43,7 @@ func CreateFood(w http.ResponseWriter, r *http.Request) {
 	store.mu.Unlock()
 
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(food)
 }
 
@@ -56,6 +57,77 @@ func GetFoods(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(foods)
+}
+
+func GetFood(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+
+	store.mu.RLock()
+	food, exists := store.foods[id]
+	store.mu.RUnlock()
+
+	if !exists {
+		http.Error(w, "Food not found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(food)
+}
+
+func UpdateFood(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+
+	store.mu.Lock()
+	food, exists := store.foods[id]
+	if !exists {
+		store.mu.Unlock()
+		http.Error(w, "Food not found", http.StatusNotFound)
+		return
+	}
+
+	var updatedFood Food
+	if err := json.NewDecoder(r.Body).Decode(&updatedFood); err != nil {
+		store.mu.Unlock()
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Validate foreign keys
+	_, catExists := GetCategoryByID(updatedFood.CategoryID)
+	_, restExists := GetRestaurantByID(updatedFood.RestaurantID)
+	if !catExists || !restExists {
+		store.mu.Unlock()
+		http.Error(w, "Invalid category or restaurant", http.StatusBadRequest)
+		return
+	}
+
+	updatedFood.ID = food.ID
+	store.foods[id] = &updatedFood
+	store.mu.Unlock()
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(updatedFood)
+}
+
+func DeleteFood(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+
+	store.mu.Lock()
+	_, exists := store.foods[id]
+	if !exists {
+		store.mu.Unlock()
+		http.Error(w, "Food not found", http.StatusNotFound)
+		return
+	}
+
+	delete(store.foods, id)
+	store.mu.Unlock()
+
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func GetFoodsByRestaurant(w http.ResponseWriter, r *http.Request) {

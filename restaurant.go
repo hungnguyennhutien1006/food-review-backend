@@ -3,7 +3,10 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 type Restaurant struct {
@@ -36,6 +39,7 @@ func CreateRestaurant(w http.ResponseWriter, r *http.Request) {
 	store.mu.Unlock()
 
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(rest)
 }
 
@@ -49,6 +53,77 @@ func GetRestaurants(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(rests)
+}
+
+func GetRestaurant(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+
+	store.mu.RLock()
+	rest, exists := store.restaurants[id]
+	store.mu.RUnlock()
+
+	if !exists {
+		http.Error(w, "Restaurant not found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(rest)
+}
+
+func UpdateRestaurant(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+
+	store.mu.Lock()
+	rest, exists := store.restaurants[id]
+	if !exists {
+		store.mu.Unlock()
+		http.Error(w, "Restaurant not found", http.StatusNotFound)
+		return
+	}
+
+	var updatedRest Restaurant
+	if err := json.NewDecoder(r.Body).Decode(&updatedRest); err != nil {
+		store.mu.Unlock()
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Validate owner exists
+	_, userExists := GetUserByID(updatedRest.OwnerID)
+	if !userExists {
+		store.mu.Unlock()
+		http.Error(w, "Owner (user) not found", http.StatusBadRequest)
+		return
+	}
+
+	updatedRest.ID = rest.ID
+	updatedRest.CreatedAt = rest.CreatedAt
+	store.restaurants[id] = &updatedRest
+	store.mu.Unlock()
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(updatedRest)
+}
+
+func DeleteRestaurant(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+
+	store.mu.Lock()
+	_, exists := store.restaurants[id]
+	if !exists {
+		store.mu.Unlock()
+		http.Error(w, "Restaurant not found", http.StatusNotFound)
+		return
+	}
+
+	delete(store.restaurants, id)
+	store.mu.Unlock()
+
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func GetRestaurantByID(id int) (*Restaurant, bool) {
