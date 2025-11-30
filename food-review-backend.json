@@ -1,0 +1,577 @@
+{
+  "info": {
+    "name": "Food Review Backend API",
+    "description": "Complete API collection for testing Go backend with User, Category, Restaurant, Food, and Comment modules",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            },
+            "description": "Lấy danh sách tất cả users"
+          }
+        },
+        {
+          "name": "Get User By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["users", "1"]
+            },
+            "description": "Lấy thông tin user theo ID"
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice Nguyen\",\n  \"email\": \"alice@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            },
+            "description": "Tạo user mới"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories",
+              "host": ["{{base_url}}"],
+              "path": ["categories"]
+            },
+            "description": "Lấy danh sách tất cả categories"
+          }
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Japanese\",\n  \"description\": \"Authentic Japanese cuisine\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/categories",
+              "host": ["{{base_url}}"],
+              "path": ["categories"]
+            },
+            "description": "Tạo category mới"
+          }
+        },
+        {
+          "name": "Create Category - Italian",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Italian\",\n  \"description\": \"Italian pasta and pizza\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/categories",
+              "host": ["{{base_url}}"],
+              "path": ["categories"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Restaurants",
+      "item": [
+        {
+          "name": "Get All Restaurants",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/restaurants",
+              "host": ["{{base_url}}"],
+              "path": ["restaurants"]
+            },
+            "description": "Lấy danh sách tất cả restaurants"
+          }
+        },
+        {
+          "name": "Create Restaurant",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sushi Bar Tokyo\",\n  \"address\": \"789 Third Ave, Hanoi\",\n  \"phone\": \"0912345678\",\n  \"owner_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/restaurants",
+              "host": ["{{base_url}}"],
+              "path": ["restaurants"]
+            },
+            "description": "Tạo restaurant mới với owner_id là user đã tồn tại"
+          }
+        },
+        {
+          "name": "Create Restaurant - Invalid Owner",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Restaurant\",\n  \"address\": \"Test Address\",\n  \"phone\": \"0900000000\",\n  \"owner_id\": 999\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/restaurants",
+              "host": ["{{base_url}}"],
+              "path": ["restaurants"]
+            },
+            "description": "Test case: Tạo restaurant với owner không tồn tại (sẽ lỗi)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Foods",
+      "item": [
+        {
+          "name": "Get All Foods",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/foods",
+              "host": ["{{base_url}}"],
+              "path": ["foods"]
+            },
+            "description": "Lấy danh sách tất cả foods"
+          }
+        },
+        {
+          "name": "Get Foods By Restaurant",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/restaurants/1/foods",
+              "host": ["{{base_url}}"],
+              "path": ["restaurants", "1", "foods"]
+            },
+            "description": "Lấy tất cả món ăn của restaurant có ID = 1"
+          }
+        },
+        {
+          "name": "Create Food",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bun Cha\",\n  \"description\": \"Grilled pork with rice vermicelli\",\n  \"price\": 45000,\n  \"category_id\": 1,\n  \"restaurant_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/foods",
+              "host": ["{{base_url}}"],
+              "path": ["foods"]
+            },
+            "description": "Tạo món ăn mới"
+          }
+        },
+        {
+          "name": "Create Food - Com Tam",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Com Tam Suon\",\n  \"description\": \"Broken rice with grilled pork chop\",\n  \"price\": 40000,\n  \"category_id\": 1,\n  \"restaurant_id\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/foods",
+              "host": ["{{base_url}}"],
+              "path": ["foods"]
+            }
+          }
+        },
+        {
+          "name": "Create Food - Invalid Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Food\",\n  \"description\": \"Test\",\n  \"price\": 10000,\n  \"category_id\": 999,\n  \"restaurant_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/foods",
+              "host": ["{{base_url}}"],
+              "path": ["foods"]
+            },
+            "description": "Test case: Tạo food với category không tồn tại (sẽ lỗi)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comments",
+      "item": [
+        {
+          "name": "Get Comments By Food",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/foods/1/comments",
+              "host": ["{{base_url}}"],
+              "path": ["foods", "1", "comments"]
+            },
+            "description": "Lấy tất cả comments của món ăn có ID = 1"
+          }
+        },
+        {
+          "name": "Get Comments By User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/1/comments",
+              "host": ["{{base_url}}"],
+              "path": ["users", "1", "comments"]
+            },
+            "description": "Lấy tất cả comments của user có ID = 1"
+          }
+        },
+        {
+          "name": "Create Comment - Rating 5",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Amazing taste! Best pho I've ever had!\",\n  \"rating\": 5,\n  \"user_id\": 1,\n  \"food_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/comments",
+              "host": ["{{base_url}}"],
+              "path": ["comments"]
+            },
+            "description": "Tạo comment với rating 5 sao"
+          }
+        },
+        {
+          "name": "Create Comment - Rating 3",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Good but not great. Could be better.\",\n  \"rating\": 3,\n  \"user_id\": 2,\n  \"food_id\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/comments",
+              "host": ["{{base_url}}"],
+              "path": ["comments"]
+            }
+          }
+        },
+        {
+          "name": "Create Comment - Invalid Rating",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Test comment\",\n  \"rating\": 10,\n  \"user_id\": 1,\n  \"food_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/comments",
+              "host": ["{{base_url}}"],
+              "path": ["comments"]
+            },
+            "description": "Test case: Rating không hợp lệ (phải 1-5, sẽ lỗi)"
+          }
+        },
+        {
+          "name": "Create Comment - Invalid User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Test comment\",\n  \"rating\": 5,\n  \"user_id\": 999,\n  \"food_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/comments",
+              "host": ["{{base_url}}"],
+              "path": ["comments"]
+            },
+            "description": "Test case: User không tồn tại (sẽ lỗi)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Test Scenarios",
+      "item": [
+        {
+          "name": "Scenario 1: Create New Restaurant with Menu",
+          "item": [
+            {
+              "name": "Step 1: Create Owner User",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Chef Minh\",\n  \"email\": \"minh@restaurant.com\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/users",
+                  "host": ["{{base_url}}"],
+                  "path": ["users"]
+                },
+                "description": "Bước 1: Tạo user làm chủ nhà hàng"
+              }
+            },
+            {
+              "name": "Step 2: Create Category",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Korean\",\n  \"description\": \"Korean BBQ and dishes\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/categories",
+                  "host": ["{{base_url}}"],
+                  "path": ["categories"]
+                },
+                "description": "Bước 2: Tạo category cho món ăn"
+              }
+            },
+            {
+              "name": "Step 3: Create Restaurant",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Seoul BBQ House\",\n  \"address\": \"555 Korean St, Hanoi\",\n  \"phone\": \"0955555555\",\n  \"owner_id\": 3\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/restaurants",
+                  "host": ["{{base_url}}"],
+                  "path": ["restaurants"]
+                },
+                "description": "Bước 3: Tạo nhà hàng (nhớ dùng owner_id từ Step 1)"
+              }
+            },
+            {
+              "name": "Step 4: Add Food Items",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Bulgogi\",\n  \"description\": \"Korean marinated beef BBQ\",\n  \"price\": 120000,\n  \"category_id\": 3,\n  \"restaurant_id\": 3\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/foods",
+                  "host": ["{{base_url}}"],
+                  "path": ["foods"]
+                },
+                "description": "Bước 4: Thêm món ăn vào menu"
+              }
+            },
+            {
+              "name": "Step 5: Verify Restaurant Menu",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/restaurants/3/foods",
+                  "host": ["{{base_url}}"],
+                  "path": ["restaurants", "3", "foods"]
+                },
+                "description": "Bước 5: Kiểm tra menu của nhà hàng"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Scenario 2: User Reviews Multiple Foods",
+          "item": [
+            {
+              "name": "Step 1: User Comments on Food 1",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"content\": \"Best pho in Hanoi! Fresh herbs and flavorful broth.\",\n  \"rating\": 5,\n  \"user_id\": 1,\n  \"food_id\": 1\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/comments",
+                  "host": ["{{base_url}}"],
+                  "path": ["comments"]
+                }
+              }
+            },
+            {
+              "name": "Step 2: User Comments on Food 2",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"content\": \"Banh mi is fresh and crispy. Good value for money.\",\n  \"rating\": 4,\n  \"user_id\": 1,\n  \"food_id\": 2\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/comments",
+                  "host": ["{{base_url}}"],
+                  "path": ["comments"]
+                }
+              }
+            },
+            {
+              "name": "Step 3: View All User's Comments",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/users/1/comments",
+                  "host": ["{{base_url}}"],
+                  "path": ["users", "1", "comments"]
+                },
+                "description": "Xem tất cả comments của user"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
