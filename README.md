@@ -1,6 +1,8 @@
 # Food Review Backend API
 
 Backend service cho hệ thống đánh giá món ăn và nhà hàng.
+Ho va ten: Nguyen Nhu Tien Hung
+Ma nhan vien: 461631
 
 ## Công nghệ sử dụng
 - Go 1.21+
