@@ -1,6 +1,8 @@
 # Food Review Backend API
 
 Backend service cho hệ thống đánh giá món ăn và nhà hàng.
+Ho va ten: Nguyen Nhu Tien Hung
+Ma nhan vien: 461631
 
 ## Công nghệ sử dụng
 - Go 1.21+
@@ -10,7 +12,7 @@ Backend service cho hệ thống đánh giá món ăn và nhà hàng.
 ## Cài đặt
 ```bash
 # Clone repository
-git clone <your-repo-url>
+git clone https://github.com/hungnguyennhutien1006/food-review-backend.git
 cd food-review-backend
 
 # Cài đặt dependencies
